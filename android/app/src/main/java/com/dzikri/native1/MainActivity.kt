@@ -1,4 +1,4 @@
-package com.native1
+package com.dzikri.native1
 
 import android.os.Bundle;
 import com.facebook.react.ReactActivity

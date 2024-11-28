@@ -1,15 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import {
-  FlatList,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
-import axios from 'axios';
+import {useCallback} from 'react';
+import {FlatList, SafeAreaView, useColorScheme} from 'react-native';
+
 import CarList from '../components/carList';
 import FocusAwareStatusBar from '../components/FocusAwareStatusBar';
+import {useDispatch, useSelector} from 'react-redux';
+// import {selectUser} from '../redux/reducers/user';
+import {getCars, selectCars} from '../redux/reducers/cars';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 
 const COLORS = {
   primary: '#A43333',
@@ -19,67 +16,61 @@ const COLORS = {
 };
 
 function List() {
-  const [cars, setCars] = useState([]);
   const isDarkMode = useColorScheme() === 'dark';
+  const dispatch = useDispatch();
+  // const user = useSelector(selectUser);
+  const cars = useSelector(selectCars);
+  const navigation = useNavigation();
 
-  useEffect(() => {
-    const fetchCars = async () => {
-      try {
-        const res = await axios('https://wonderful-renata-belajaroioi-02d4cd41.koyeb.app/api/v1/cars');
-        setCars(res.data); // Ensure you access the data array correctly
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    fetchCars();
-  }, []);
+  const fetchCars = async (page = 1) => {
+    console.log(cars.data.data);
+    if (
+      !cars.data.length ||
+      (page > cars.data?.data.page && cars.status === 'idle')
+    ) {
+      // console.log(cars);
+      dispatch(getCars(page));
+    }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchCars();
+    }, []),
+  );
+
+ 
+  const backgroundStyle = {
+    // overflow: 'visible',
+    backgroundColor: isDarkMode ? COLORS.darker : COLORS.lighter,
+  };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={backgroundStyle}>
       <FocusAwareStatusBar
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={COLORS.lighter}
       />
-      <View style={styles.headerContainer}>
-        <Text style={styles.headerText}>Daftar Mobil</Text>
-      </View>
+      {/* end banner */}
       <FlatList
-        data={cars.data}
-        renderItem={({item}) => (
-            <CarList style={styles.CarList}
-              key={item.id}
-              image={{uri : item.img}}
-              carName={item.name}
-              passengers={5}
-              baggage={4}
-              price={item.price}
-            />
-          )}
-          keyExtractor={item => item.id}
-        />
+        data={cars.data?.data}
+        renderItem={({item, index}) => (
+          <CarList
+            key={item.id}
+            image={{uri: item.img}}
+            carName={item.name}
+            passengers={5}
+            baggage={4}
+            price={item.price}
+            onEndReached={() => fetchCars((cars.data?.page || 1) + 1)}
+            onEndReachedThreshold={0.8}
+            onPress={ navigation.navigate}
+          />
+        )}
+        keyExtractor={item => item.id}
+      />
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 10,
-    backgroundColor: '#E8EBEA',
-  },
-  headerContainer: {
-    backgroundColor: COLORS.lighter,
-    paddingVertical: 15,
-    paddingHorizontal: 20,
-  },
-  headerText: {
-    fontSize: 25,
-    fontWeight: 'bold',
-    color: COLORS.darker,
-  },
-  CarList:{
-    marginBottom:5,
-    borderRadius: 9,
-  },
-});
 
 export default List;

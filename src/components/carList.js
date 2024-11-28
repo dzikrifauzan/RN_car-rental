@@ -32,7 +32,10 @@ export default function CarList({
         </Col>
         <Col>
           <Text
-            style={{color: isDarkMode ? '#fff' : '#000', ...styles.carName}}>
+            style={{
+              color: isDarkMode ? '#fff' : '#000',
+              ...styles.carName,
+            }}>
             {carName}
           </Text>
           <Row gap={5}>
@@ -54,9 +57,11 @@ export default function CarList({
 
 const styles = StyleSheet.create({
   card: {
-    shadowColor: 'rgba(0,0,0,2)',
+    shadowColor: 'rgba(0,0,0,1)',
+    elevation: 2,
+    borderColor: 'rgba(0,0,0,0.2)',
     borderWidth: 0.5,
-    borderRadius: 4,
+    borderRadius: 2,
     padding: 20,
     marginVertical: 10,
     marginHorizontal: 12,
