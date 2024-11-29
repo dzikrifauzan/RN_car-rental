@@ -20,10 +20,8 @@ export default function GoogleButton() {
     await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
     // Get the users ID token
     const signInResult = await GoogleSignin.signIn();
-    console.log('signin result', signInResult);
     // Try the new style of google-sign in result, from v13+ of that module
     let idToken = signInResult.data?.idToken;
-    console.log('google token',idToken);
     if (!idToken) {
       // if you are using older versions of google-signin, try old style result
       idToken = signInResult.idToken;

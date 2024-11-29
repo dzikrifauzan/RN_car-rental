@@ -38,8 +38,6 @@ const orderListSlice = createSlice({
     });
     builder.addCase(getOrder.rejected, (state, action) => {
       state.status = 'failed';
-      console.log('Error response:', action.payload);
-      console.log('Error response:', state);
       state.error = action.payload || 'Something went wrong';
     });
 

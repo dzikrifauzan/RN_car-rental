@@ -60,7 +60,6 @@ function Home() {
       !cars.data.length ||
       (page > cars.data?.data.page && cars.status === 'idle')
     ) {
-      console.log('ssssssssssssssssssssssssssssssssssssssssssssss',cars.data);
       dispatch(getCars(page));
     }
   };

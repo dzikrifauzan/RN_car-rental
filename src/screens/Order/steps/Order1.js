@@ -318,14 +318,15 @@ const styles = StyleSheet.create({
     width: '70%',
   },
   promoButton: {
-    width: '30%',
+    width: '40%',
+    height:'100%',
     borderWidth: 1,
     borderColor: '#3D7B3F',
   },
   promoTextWrapper: {
     flex: 1,
     flexDirection: 'row',
-    alignItems: 'center',
+    textAlign: 'center',
     justifyContent: 'space-between',
   },
   promoText: {

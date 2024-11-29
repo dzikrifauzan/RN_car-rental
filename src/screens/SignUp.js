@@ -49,7 +49,6 @@ export default function SignUp() {
           },
         },
       );
-      console.log(res);
       setModalVisible(true);
       setErrorMessage(null);
     } catch (e) {

@@ -15,7 +15,6 @@ export default function Akun() {
       dispatch(getProfile(user.token));
     }
   }, [user]);
-  console.log('userrrrrrrrrr',user);
   return (
     <View style={styles.container}>
       {!user.isLogin ? (

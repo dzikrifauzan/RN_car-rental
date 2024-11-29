@@ -1,4 +1,11 @@
-import {useState, useEffect} from 'react';
+//ketika di klik order di listOrder, tapi dia gak sesuai dengan apa yang di order
+//misal diklik order yaris, tapi pas masuk screen order yang muncul zenix
+//jadinya si ordernya nyimpen data zenix yang dari formData
+
+
+
+
+import {useCallback, useEffect} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import {ProgressStep, ProgressSteps} from 'react-native-progress-stepper';
 
@@ -8,7 +15,7 @@ import Step1 from './steps/Order1';
 import Step2 from './steps/Order2';
 import Step3 from './steps/Order3';
 
-import {selectCarDetail} from '../../redux/reducers/cars';
+import { getCars, selectCarDetail} from '../../redux/reducers/cars';
 import {
   selectOrder,
   setStateByName,
@@ -16,72 +23,32 @@ import {
 } from '../../redux/reducers/Order';
 import {useDispatch, useSelector} from 'react-redux';
 import Button from '../../components/Button';
-import {useNavigation} from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
+import { selectUser } from '../../redux/reducers/user';
 
 export default function Order() {
   const carDetails = useSelector(selectCarDetail);
   const {activeStep, selectedBank, status, errorMessage, formData} =
     useSelector(selectOrder);
   const dispatch = useDispatch();
-  const navigation = useNavigation();
-
   const handleOrder = () => {
     if (formData) {
       dispatch(postOrder(formData));
     }
   };
+  
+  const user = useSelector(selectUser)
 
-  useEffect(() => {
-    if (status === 'success') {
-      dispatch(setStateByName({name: 'activeStep', value: 1}));
-    } else if (status === 'error') {
-      console.error('Error:', errorMessage);
-    }
-  }, [status, dispatch, errorMessage]);
 
-  const renderFooter = () => {
-    if (activeStep === 0) {
-      return (
-        <>
-          <Text style={styles.price}>
-            {formatCurrency.format(carDetails.data?.price || 0)}
-          </Text>
-          <Button
-            disabled={!selectedBank}
-            color="#3D7B3F"
-            onPress={handleOrder}
-            title="Lanjutkan Pembayaran"
-          />
-        </>
-      );
-    }
-    if (activeStep === 1) {
-      return (
-        <>
-          <Text style={styles.label}>
-            Klik konfirmasi pembayaran untuk mempercepat proses pengecekan
-          </Text>
-          <Button
-            color="#3D7B3F"
-            style={{marginBottom: 10}}
-            onPress={() =>
-              dispatch(setStateByName({name: 'isModalVisible', value: true}))
-            }
-            title="Konfirmasi Pembayaran"
-          />
-          <Button
-            color="#3D7B3F"
-            title="Lihat Daftar Pesanan"
-            onPress={() => navigation.navigate('HomeTabs')}
-          />
-        </>
-      );
-    }
-    return null;
-  };
-
+    useFocusEffect(
+      useCallback(() => {
+        if (user.token) {
+          dispatch(getCars(user.token));
+        }
+      }, [user, dispatch])
+    );
   return (
-    <View style={{flex: 1, backgroundColor: '#fff'}}>
+    <View style={styles.container}>
       <ProgressSteps activeStep={activeStep}>
         <ProgressStep label="Pilih Metode" removeBtnRow={true}>
           <Step1 />
@@ -93,12 +60,50 @@ export default function Order() {
           <Step3 />
         </ProgressStep>
       </ProgressSteps>
-      <View style={styles.footer}>{renderFooter()}</View>
+      <View style={styles.footer}>
+        {activeStep === 0 && (
+          <>
+            <Text style={styles.price}>
+              {formatCurrency.format(carDetails.data?.price || 0)}
+            </Text>
+            <Button
+              disabled={!selectedBank && true}
+              color="#3D7B3F"
+              onPress={handleOrder}
+              title="Lanjutkan Pembayaran"
+            />
+          </>
+        )}
+        {activeStep === 1 && (
+          <>
+            <Text style={styles.label}>
+              Klik konfirmasi pembayaran untuk mempercepat proses pengecekan
+            </Text>
+            <Button
+              color="#3D7B3F"
+              style={styles.buttonMargin}
+              onPress={() => {
+                dispatch(setStateByName({name: 'isModalVisible', value: true}));
+              }}
+              title="Konfirmasi Pembayaran"
+            />
+            <Button
+              color="#ffffff"
+              textColor="#000"
+              title="Lihat Daftar Pesanan"
+            />
+          </>
+        )}
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
   price: {
     fontFamily: 'PoppinsBold',
     fontSize: 20,
@@ -111,10 +116,13 @@ const styles = StyleSheet.create({
   },
   footer: {
     backgroundColor: '#eeeeee',
-    position: 'absolute',
+    position: 'fixed',
     bottom: 0,
     left: 0,
     right: 0,
     padding: 20,
+  },
+  buttonMargin: {
+    marginBottom: 10,
   },
 });

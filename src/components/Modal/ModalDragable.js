@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, {useRef, useEffect} from 'react';
 import {
   Animated,
   Dimensions,
@@ -18,9 +18,10 @@ export default function AnimatedModal({
 
   const panResponder = PanResponder.create({
     onStartShouldSetPanResponder: () => true,
-    onPanResponderMove: Animated.event([null, { dy: pan.y }], {
-      useNativeDriver: false,
-    }),
+    onPanResponderMove: Animated.event(
+      [null, {dy: pan}], // Use pan directly for dy
+      {useNativeDriver: false},
+    ),
     onPanResponderRelease: (e, gestureState) => {
       if (gestureState.dy > 100) {
         Animated.timing(pan, {
@@ -49,8 +50,14 @@ export default function AnimatedModal({
         duration: 300,
         useNativeDriver: true,
       }).start();
+    } else {
+      Animated.timing(pan, {
+        toValue: screenHeight,
+        duration: 300,
+        useNativeDriver: true,
+      }).start();
     }
-  }, []);
+  }, [isVisible]);
 
   return (
     <Modal visible={isVisible} transparent={true} animationType="none">
@@ -60,7 +67,7 @@ export default function AnimatedModal({
           style={[
             styles.container,
             {
-              transform: [{ translateY: pan }],
+              transform: [{translateY: pan}],
             },
           ]}>
           <View style={styles.bar} />

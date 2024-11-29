@@ -7,10 +7,8 @@ export const postLogin = createAsyncThunk(
     try {
       const res = await apiClient.post('/auth/signin', payload);
       const data = res.data;
-      console.log(data);
       return data;
     } catch (e) {
-      console.log(e);
       if (e.response.data) {
         return rejectWithValue(e.response.data.message);
       } else {
@@ -25,7 +23,6 @@ export const googleLogin = createAsyncThunk(
   async (payload, {rejectWithValue}) => {
     try {
       const res = await apiClient.post('/auth/googlesignin', payload);
-      console.log('nyoba token',res);
       const data = res.data;
       return data;
     } catch (e) {

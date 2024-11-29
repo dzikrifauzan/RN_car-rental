@@ -4,7 +4,6 @@ import {resetState as logout} from '@reducers/user';
 import {navigate} from './rootNavigation';
 // import showGlobalModal from '@Components/GlobalModal';
 
-console.log(API_BASE_URL);
 
 export const apiClient = axios.create({
   baseURL: API_BASE_URL,
@@ -15,9 +14,7 @@ export const setupAxiosInterceptors = store => {
   const dispatch = store.dispatch;
   const onRequestSuccess = config => {
     const {token} = store.getState().user;
-    console.log('request success', config);
     if (token) {
-      console.log(token);
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
@@ -29,7 +26,6 @@ export const setupAxiosInterceptors = store => {
   apiClient.interceptors.request.use(onRequestSuccess, onRequestFail);
 
   const onResponseSuccess = response => {
-    console.log('response success', response);
     return response;
   };
   const onResponseFail = error => {

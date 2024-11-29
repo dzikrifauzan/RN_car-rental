@@ -1,10 +1,10 @@
-import { Text, Image, StyleSheet } from 'react-native';
-import React, { useCallback } from 'react';
+import {Text, Image, StyleSheet} from 'react-native';
+import React, {useCallback} from 'react';
 import Icon from 'react-native-vector-icons/Feather';
 import Button from './Button';
-import { Row, Col } from './Grid';
-import { formatCurrency } from '../utils/formatCurrency';
-import { useColorScheme } from 'react-native';
+import {Row, Col} from './Grid';
+import {formatCurrency} from '../utils/formatCurrency';
+import {useColorScheme} from 'react-native';
 import Countdown from './Countdown';
 
 const STATUS_COLOR = {
@@ -20,36 +20,44 @@ export default function OrderList({
   status,
   price,
   style,
-})
-{
+}) {
   const isDarkMode = useColorScheme() === 'dark';
-  const formatIDR = useCallback((price) => formatCurrency.format(price), []);
-  console.log(new Date(overdue))
+  const formatIDR = useCallback(price => formatCurrency.format(price), []);
   return (
-    <Button style={{
+    <Button
+      style={{
         backgroundColor: isDarkMode ? '#121212' : '#fff',
         ...styles.card,
         ...style,
-        }}
-        onPress={onPress}
-    >
+      }}
+      onPress={onPress}>
       <Row alignItems={'center'} gap={20}>
         <Col>
-          <Text style={{
+          <Text
+            style={{
               color: isDarkMode ? '#fff' : '#000',
               ...styles.carName,
-            }}>{carName}</Text>
+            }}>
+            {carName}
+          </Text>
         </Col>
         <Col>
-          {status === 'pending' ? <Countdown until={overdue} /> : <Text style={{color: STATUS_COLOR[status]}}>{status}</Text>}
+          {status === 'pending' ? (
+            <Countdown until={overdue} />
+          ) : (
+            <Text style={{color: STATUS_COLOR[status]}}>{status}</Text>
+          )}
         </Col>
       </Row>
       <Row gap={5}>
         <Col>
-          <Text style={{
-            color: isDarkMode ? '#fff' : '#000',
-            ...styles.carName,
-          }}>{date}</Text>
+          <Text
+            style={{
+              color: isDarkMode ? '#fff' : '#000',
+              ...styles.carName,
+            }}>
+            {date}
+          </Text>
         </Col>
         <Col>
           <Text style={styles.price}>{formatIDR(price)}</Text>

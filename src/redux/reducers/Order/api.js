@@ -12,7 +12,6 @@ export const getOrder = createAsyncThunk(
         },
         headers: {Authorization: `Bearer ${token}`},
       });
-      console.log(res);
       return res.data;
     } catch (e) {
       if (e.response.data) {
@@ -27,7 +26,7 @@ export const getOrderDetails = createAsyncThunk(
   'getOrderDetails',
   async ({id, token}, {rejectWithValue}) => {
     try {
-      const res = await apiClient('/order/' + id,{
+      const res = await apiClient('/order/' + id, {
         headers: {Authorization: `Bearer ${token}`},
       });
       return res.data;
@@ -45,11 +44,9 @@ export const postOrder = createAsyncThunk(
   'postOrder',
   async (data, {rejectWithValue}) => {
     try {
-      const res = await apiClient.post('/order/', data
-      );
+      const res = await apiClient.post('/order/', data);
       return res.data;
     } catch (e) {
-      console.log('console catch',data);
       if (e.response.data) {
         return rejectWithValue(e.response.data.message);
       } else {

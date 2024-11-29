@@ -94,8 +94,8 @@ export default function Step2() {
         </View>
       </View>
 
-      {/* <AnimatedModal
-        Visible={isModalVisible}
+      <AnimatedModal
+        isVisible={isModalVisible}
         onClose={() =>
           dispatch(setStateByName({name: 'isModalVisible', value: false}))
         }>
@@ -121,7 +121,7 @@ export default function Step2() {
           </Pressable>
           <Button title="Upload" color="#3D7B3F" onPress={handleUpload} />
         </View>
-      </AnimatedModal> */}
+      </AnimatedModal>
     </View>
   );
 }

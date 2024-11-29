@@ -23,7 +23,7 @@ function List() {
   const navigation = useNavigation();
 
   const fetchCars = async (page = 1) => {
-    console.log(cars.data.data);
+    // console.log(cars.data.data);
     if (
       !cars.data.length ||
       (page > cars.data?.data.page && cars.status === 'idle')
